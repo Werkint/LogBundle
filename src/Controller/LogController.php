@@ -42,6 +42,9 @@ class LogController
      * @Rest\Get("/list/{objectClass}_{objectId}_all.json", name="werkint_log_list"
      * , defaults={"_format": "json"}
      * )
+     * @Rest\Get("/list/__all.json"
+     * , defaults={"_format": "json"}
+     * )
      * @Rest\View()
      */
     public function listAction(Request $request, $objectClass = null, $objectId = null)
