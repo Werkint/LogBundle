@@ -2,7 +2,7 @@
 namespace Werkint\Bundle\LogBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Obmenat\Bundle\AppBundle\Service\PageableTrait;
+use Werkint\Bundle\FrameworkExtraBundle\Service\Query\PageableTrait;
 
 /**
  * @see    Log

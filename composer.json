@@ -10,6 +10,7 @@
     ],
     "require": {
         "symfony/framework-bundle": "*",
+        "werkint/framework-extra-bundle": "*",
 
         "php": ">=5.5"
     },

@@ -22,4 +22,4 @@ services:
     class: Werkint\Bundle\LogBundle\Service\Logger\Pointcut\PointcutInterceptor
     arguments:
       - @werkint_log.logger.metadata_factory
-      - @monolog.logger.finance
+      - @monolog.logger.finance # TODO: rename

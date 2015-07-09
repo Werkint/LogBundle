@@ -1,7 +1,6 @@
 <?php
 namespace Werkint\Bundle\LogBundle\Service\Logger;
 
-use Emisser\Bundle\ProcessingBundle\Entity\Transaction;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -15,6 +14,7 @@ use Werkint\Bundle\LogBundle\Entity\Log;
 class DoctrineHandler extends AbstractProcessingHandler
 {
     const MANAGER_NAME = 'log';
+    const OBJECT_KEY = 'target_object';
 
     protected $doctrine;
 
@@ -55,14 +55,14 @@ class DoctrineHandler extends AbstractProcessingHandler
             ->setExtraData($record['context'])
             ->setLoggedAt($record['datetime']);
 
-        if (!empty($data['finance_object'])) {
-            $transaction = $data['finance_object'];
-            if (!$transaction instanceof Transaction) {
-                throw new \Exception(sprintf('Wrong finance_object class %s',
-                    get_class($transaction)
+        if (!empty($data[static::OBJECT_KEY])) {
+            $object = $data[static::OBJECT_KEY];
+            if (!$object instanceof LoggableObjectInterface) {
+                throw new \Exception(sprintf('Wrong object class %s',
+                    get_class($object)
                 ));
             }
-            $log->setObject($transaction);
+            $log->setObject($object);
         }
 
         $manager->persist($log);

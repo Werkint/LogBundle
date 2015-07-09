@@ -6,6 +6,7 @@ use CG\Proxy\MethodInvocation;
 use Metadata\MetadataFactoryInterface;
 use Metadata\MethodMetadata;
 use Monolog\Logger;
+use Werkint\Bundle\LogBundle\Service\Logger\DoctrineHandler;
 use Werkint\Bundle\LogBundle\Service\Logger\LoggerAwareInterface;
 use Werkint\Bundle\LogBundle\Service\Logger\Metadata\MethodMetadata as LoggerMethodMetadata;
 
@@ -17,8 +18,6 @@ use Werkint\Bundle\LogBundle\Service\Logger\Metadata\MethodMetadata as LoggerMet
 class PointcutInterceptor implements
     MethodInterceptorInterface
 {
-    const OBJECT_KEY = 'finance_object';
-
     protected $metadataFactory;
     protected $logger;
 
@@ -70,17 +69,17 @@ class PointcutInterceptor implements
         $object = $invocation->object;
         /** @var LoggerAwareInterface $object */
 
-        $finance_object = null;
+        $targetObject = null;
         foreach ($invocation->reflection->getParameters() as $parameter) {
             if ($parameter->name === $metadata->getArgument()) {
-                $finance_object = $invocation->arguments[$parameter->getPosition()];
+                $targetObject = $invocation->arguments[$parameter->getPosition()];
                 break;
             }
         }
 
-        if ($finance_object) {
-            $this->logger->pushProcessor(function ($record) use (&$finance_object) {
-                $record['extra'][static::OBJECT_KEY] = $finance_object;
+        if ($targetObject) {
+            $this->logger->pushProcessor(function ($record) use (&$targetObject) {
+                $record['extra'][DoctrineHandler::OBJECT_KEY] = $targetObject;
                 return $record;
             });
         }
@@ -88,7 +87,7 @@ class PointcutInterceptor implements
         $object->setLogger($this->logger);
         $ret = $invocation->proceed();
 
-        if ($finance_object) {
+        if ($targetObject) {
             $this->logger->popProcessor();
         }
         return $ret;
