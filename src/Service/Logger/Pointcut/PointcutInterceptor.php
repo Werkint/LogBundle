@@ -85,11 +85,19 @@ class PointcutInterceptor implements
         }
 
         $object->setLogger($this->logger);
-        $ret = $invocation->proceed();
+        try {
+            $ret = $invocation->proceed();
+        } catch (\Exception $e) {
+        }
 
         if ($targetObject) {
             $this->logger->popProcessor();
         }
+
+        if (isset($e)) {
+            throw $e;
+        }
+
         return $ret;
     }
 } 
