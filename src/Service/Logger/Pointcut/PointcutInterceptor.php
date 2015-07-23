@@ -84,6 +84,7 @@ class PointcutInterceptor implements
             });
         }
 
+        // TODO: logger ставить при создании сервиса
         $object->setLogger($this->logger);
         try {
             $ret = $invocation->proceed();

@@ -43,10 +43,10 @@ class DoctrineHandler extends AbstractProcessingHandler
 
         $data = $record['extra'];
 
-        if (!empty($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
-            $record['context']['exception'] = $this->formatException(
-                $record['context']['exception']
-            );
+        foreach($record['context'] as $key=>$row){
+            if($row instanceof Context\AbstractData){
+                $record['context'][$key] = $row->dump();
+            }
         }
 
         $log = new Log();
@@ -67,19 +67,5 @@ class DoctrineHandler extends AbstractProcessingHandler
 
         $manager->persist($log);
         $manager->flush($log);
-    }
-
-    protected function formatException(\Exception $exception)
-    {
-        $messages = [];
-        do {
-            $messages[] = $exception->getMessage();
-            $top = $exception;
-        } while ($exception = $exception->getPrevious());
-
-        return [
-            'messages'   => $messages,
-            'stacktrace' => explode("\n", $top->getTraceAsString()),
-        ];
     }
 }
