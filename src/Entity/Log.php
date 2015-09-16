@@ -1,6 +1,7 @@
 <?php
 namespace Werkint\Bundle\LogBundle\Entity;
 
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableMethods;
@@ -90,7 +91,7 @@ class Log
     public function setObject(LoggableObjectInterface $object = null)
     {
         $this->objectId = $object ? $object->getId() : null;
-        $this->objectClass = $object ? get_class($object) : null;
+        $this->objectClass = $object ? ClassUtils::getClass($object) : null;
         return $this;
     }
 
