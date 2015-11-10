@@ -13,7 +13,12 @@ use Werkint\Bundle\LogBundle\Service\Logger\LoggableObjectInterface;
  * @author Bogdan Yurov <bogdan@yurov.me>
  *
  * @ORM\Entity(repositoryClass="LogRepository")
- * @ORM\Table(name="werkint_log_log")
+ * @ORM\Table(name="werkint_log_log"
+ * , indexes={
+ *     @ORM\Index(name="object_idx", columns={"object_id", "object_class", "loggedAt"}),
+ *     @ORM\Index(name="date_idx", columns={"loggedAt"})
+ *   }
+ * )
  */
 class Log
 {
