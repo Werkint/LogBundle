@@ -1,4 +1,15 @@
+parameters:
+  werkint_log.logger.serializerhandler.class:
+    Werkint\Bundle\LogBundle\Service\Logger\SerializerHandler
+
 services:
+  werkint_log.logger.serializerhandler:
+    class: %werkint_log.logger.serializerhandler.class%
+    arguments:
+      - @doctrine.orm.entity_manager
+    tags:
+      - { name: jms_serializer.handler, type: Werkint\Bundle\LogBundle\Service\Logger\LoggableObjectInterface, direction: deserialization, format: json, method: deserializeFromJson }
+
   werkint_log.logger.doctrinehandler:
     class: Werkint\Bundle\LogBundle\Service\Logger\DoctrineHandler
     arguments:

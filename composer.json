@@ -1,20 +1,23 @@
 {
-    "name": "werkint/log-bundle",
-    "type": "symfony-bundle",
-    "license": "GPL",
-    "authors": [
+    "name":              "werkint/log-bundle",
+    "type":              "symfony-bundle",
+    "description":       "Bundle providing logging ability",
+
+    "license":           "GPL",
+    "authors":           [
         {
-            "name": "Bogdan Yurov",
+            "name":  "Bogdan Yurov",
             "email": "bogdan@yurov.me"
         }
     ],
-    "require": {
-        "symfony/framework-bundle": "*",
+    "require":           {
+        "symfony/framework-bundle":       "*",
         "werkint/framework-extra-bundle": "*",
+        "werkint/query-bundle":           "~0.0.1",
 
-        "php": ">=5.5"
+        "php":                            ">=5.5"
     },
-    "autoload": {
+    "autoload":          {
         "psr-4": {
             "Werkint\\Bundle\\LogBundle\\": "src"
         }
