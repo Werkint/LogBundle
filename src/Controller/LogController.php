@@ -1,15 +1,14 @@
 <?php
 namespace Werkint\Bundle\LogBundle\Controller;
 
-use Doctrine\ORM\QueryBuilder;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc as API;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Werkint\Bundle\LogBundle\Entity\Log;
-use Werkint\Bundle\LogBundle\Entity\LogRepository;
 use Werkint\Bundle\LogBundle\Entity\Query\LogQuery;
+use Werkint\Bundle\QueryBundle\Service\QueryProcessorInterface;
 
 /**
  * @see    Log
@@ -21,10 +20,10 @@ use Werkint\Bundle\LogBundle\Entity\Query\LogQuery;
 class LogController
 {
     /**
-     * @var LogRepository
-     * @DI\Inject("werkint_log.repo.log")
+     * @var QueryProcessorInterface
+     * @DI\Inject("werkint_query.queryprocessor")
      */
-    private $repoLog;
+    private $queryProcessor;
 
     // -- Accessors ---------------------------------------
 
@@ -41,24 +40,7 @@ class LogController
      */
     public function listAction(LogQuery $query)
     {
-        return $this->repoLog->findAllPageable(
-            $query->getPage(),
-            $query->getPageGroup(),
-            function (QueryBuilder $qb, $alias) use ($query) {
-                if ($query->getObject()) {
-                    $qb->andWhere($alias . '.objectId = :objectId')
-                        ->setParameter('objectId', $query->getObject()->getId())
-                        ->andWhere($alias . '.objectClass = :objectClass')
-                        ->setParameter('objectClass', get_class($query->getObject()));
-                } else {
-                    $qb->andWhere($alias . '.objectId is null')
-                        ->andWhere($alias . '.objectClass is null');
-                }
-
-                $qb->orderBy($alias . '.loggedAt', 'DESC')
-                    ->addOrderBy($alias . '.id', 'DESC');
-            }
-        );
+        return $this->queryProcessor->process($query);
     }
 
     /**

@@ -12,7 +12,6 @@
     ],
     "require":           {
         "symfony/framework-bundle":       "*",
-        "werkint/framework-extra-bundle": "*",
         "werkint/query-bundle":           "~0.0.1",
 
         "php":                            ">=5.5"

@@ -1,4 +1,15 @@
+parameters:
+  werkint_log.query.transactionhandler.class:
+    Werkint\Bundle\LogBundle\Entity\Query\LogHandler
+
 services:
+  werkint_log.query.transactionhandler:
+    class: %werkint_log.query.transactionhandler.class%
+    arguments:
+      - @werkint_log.repo.log
+    tags:
+      - { name: werkint_query.queryhandler }
+
   werkint_log.repo.log:
     class:            Werkint\Bundle\LogBundle\Entity\LogRepository
     factory_service:  doctrine.orm.entity_manager

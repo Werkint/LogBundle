@@ -1,6 +1,16 @@
 parameters:
   werkint_log.logger.serializerhandler.class:
     Werkint\Bundle\LogBundle\Service\Logger\SerializerHandler
+  werkint_log.logger.doctrinehandler.class:
+    Werkint\Bundle\LogBundle\Service\Logger\DoctrineHandler
+  werkint_log.logger.annotation_driver.class:
+    Werkint\Bundle\LogBundle\Service\Logger\Metadata\AnnotationDriver
+  werkint_log.logger.metadata_factory.class:
+    Metadata\MetadataFactory
+  werkint_log.logger.pointcut.class:
+    Werkint\Bundle\LogBundle\Service\Logger\Pointcut\LoggerPointcut
+  werkint_log.logger.interceptor.class:
+    Werkint\Bundle\LogBundle\Service\Logger\Pointcut\PointcutInterceptor
 
 services:
   werkint_log.logger.serializerhandler:
@@ -11,26 +21,27 @@ services:
       - { name: jms_serializer.handler, type: Werkint\Bundle\LogBundle\Service\Logger\LoggableObjectInterface, direction: deserialization, format: json, method: deserializeFromJson }
 
   werkint_log.logger.doctrinehandler:
-    class: Werkint\Bundle\LogBundle\Service\Logger\DoctrineHandler
+    class: %werkint_log.logger.doctrinehandler.class%
     arguments:
       - @doctrine
 
   werkint_log.logger.annotation_driver:
-    class: Werkint\Bundle\LogBundle\Service\Logger\Metadata\AnnotationDriver
+    class: %werkint_log.logger.annotation_driver.class%
     arguments:
       - @annotation_reader
   werkint_log.logger.metadata_factory:
-    class: Metadata\MetadataFactory
+    class: %werkint_log.logger.metadata_factory.class%
     arguments:
       - @werkint_log.logger.annotation_driver
   werkint_log.logger.pointcut:
-    class: Werkint\Bundle\LogBundle\Service\Logger\Pointcut\LoggerPointcut
+    class: %werkint_log.logger.pointcut.class%
     arguments:
       - @werkint_log.logger.metadata_factory
     tags:
       - { name: jms_aop.pointcut, interceptor: werkint_log.logger.interceptor }
   werkint_log.logger.interceptor:
-    class: Werkint\Bundle\LogBundle\Service\Logger\Pointcut\PointcutInterceptor
+    class: %werkint_log.logger.interceptor.class%
     arguments:
       - @werkint_log.logger.metadata_factory
-      - @monolog.logger.finance # TODO: rename
+      # TODO: rename
+      - @monolog.logger.finance
